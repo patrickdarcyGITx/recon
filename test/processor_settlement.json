@@ -1,15 +1,15 @@
 [
   {
     "network_ref": "ARN74000000000000058376",
-    "merchant_ref": "ORD-003-80239",
-    "merchant_id": "MERCH-003",
-    "card_last4": "5264",
+    "merchant_ref": "ORD-006-29772",
+    "merchant_id": "MERCH-006",
+    "card_last4": "1241",
     "card_type": "MASTERCARD",
-    "settled_amount": "-892.70",
+    "settled_amount": "-336.42",
     "interchange_fee": "0.00",
     "processor_fee": "0.00",
     "currency": "USD",
-    "settlement_date": "2026-06-10"
+    "settlement_date": "2026-06-09"
   },
   {
     "network_ref": "ARN74000000000000005568",
@@ -37,15 +37,15 @@
   },
   {
     "network_ref": "ARN74000000000000058801",
-    "merchant_ref": "ORD-008-86387",
-    "merchant_id": "MERCH-008",
-    "card_last4": "5297",
-    "card_type": "VISA",
-    "settled_amount": "406.30",
-    "interchange_fee": "7.57",
-    "processor_fee": "1.30",
+    "merchant_ref": "ORD-004-22337",
+    "merchant_id": "MERCH-004",
+    "card_last4": "9062",
+    "card_type": "MASTERCARD",
+    "settled_amount": "65.97",
+    "interchange_fee": "1.38",
+    "processor_fee": "0.25",
     "currency": "USD",
-    "settlement_date": "2026-06-11"
+    "settlement_date": "2026-06-10"
   },
   {
     "network_ref": "ARN74000000000000048583",
@@ -73,27 +73,27 @@
   },
   {
     "network_ref": "ARN74000000000000076360",
-    "merchant_ref": "ORD-003-22337",
-    "merchant_id": "MERCH-003",
-    "card_last4": "8746",
-    "card_type": "MASTERCARD",
-    "settled_amount": "-70.29",
+    "merchant_ref": "ORD-001-95319",
+    "merchant_id": "MERCH-001",
+    "card_last4": "2285",
+    "card_type": "DISCOVER",
+    "settled_amount": "-383.21",
     "interchange_fee": "0.00",
     "processor_fee": "0.00",
     "currency": "USD",
-    "settlement_date": "2026-06-07"
+    "settlement_date": "2026-06-05"
   },
   {
     "network_ref": "ARN74000000000000078631",
-    "merchant_ref": "ORD-003-38140",
-    "merchant_id": "MERCH-003",
-    "card_last4": "2352",
-    "card_type": "AMEX",
-    "settled_amount": "527.32",
-    "interchange_fee": "13.72",
-    "processor_fee": "1.68",
+    "merchant_ref": "ORD-008-17602",
+    "merchant_id": "MERCH-008",
+    "card_last4": "4143",
+    "card_type": "VISA",
+    "settled_amount": "229.58",
+    "interchange_fee": "4.32",
+    "processor_fee": "0.75",
     "currency": "USD",
-    "settlement_date": "2026-06-07"
+    "settlement_date": "2026-06-04"
   },
   {
     "network_ref": "ARN74000000000000008077",
@@ -109,15 +109,15 @@
   },
   {
     "network_ref": "ARN74000000000000052411",
-    "merchant_ref": "ORD-008-76510",
-    "merchant_id": "MERCH-008",
-    "card_last4": "3926",
-    "card_type": "DISCOVER",
-    "settled_amount": "533.57",
-    "interchange_fee": "13.32",
-    "processor_fee": "1.70",
+    "merchant_ref": "ORD-006-86387",
+    "merchant_id": "MERCH-006",
+    "card_last4": "0831",
+    "card_type": "VISA",
+    "settled_amount": "695.14",
+    "interchange_fee": "15.18",
+    "processor_fee": "2.19",
     "currency": "USD",
-    "settlement_date": "2026-06-03"
+    "settlement_date": "2026-06-07"
   },
   {
     "network_ref": "ARN74000000000000050652",
@@ -133,26 +133,26 @@
   },
   {
     "network_ref": "ARN74000000000000036173",
-    "merchant_ref": "ORD-005-17602",
-    "merchant_id": "MERCH-005",
-    "card_last4": "0102",
-    "card_type": "AMEX",
-    "settled_amount": "132.81",
-    "interchange_fee": "4.61",
-    "processor_fee": "0.58",
+    "merchant_ref": "ORD-006-57931",
+    "merchant_id": "MERCH-006",
+    "card_last4": "3003",
+    "card_type": "VISA",
+    "settled_amount": "738.25",
+    "interchange_fee": "13.74",
+    "processor_fee": "2.32",
     "currency": "USD",
-    "settlement_date": "2026-06-06"
+    "settlement_date": "2026-06-05"
   },
   {
     "network_ref": "ARN74000000000000010991",
-    "merchant_ref": "ORD-003-38140",
-    "merchant_id": "MERCH-003",
-    "card_last4": "2352",
-    "card_type": "AMEX",
-    "settled_amount": "527.32",
-    "interchange_fee": "13.72",
-    "processor_fee": "1.68",
+    "merchant_ref": "ORD-008-17602",
+    "merchant_id": "MERCH-008",
+    "card_last4": "4143",
+    "card_type": "VISA",
+    "settled_amount": "229.58",
+    "interchange_fee": "4.32",
+    "processor_fee": "0.75",
     "currency": "USD",
-    "settlement_date": "2026-06-07"
+    "settlement_date": "2026-06-04"
   }
 ]

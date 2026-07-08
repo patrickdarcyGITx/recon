@@ -19,4 +19,6 @@ Notes:
 
 - The duplicate produces **two** settlement rows for **one** internal transaction - which is why there are 13 settlement records but only 8 clean matches plus the breaks.
 - The **fee discrepancy** row is deliberately tricky: its `settled_amount` is internally consistent with the fees the processor _reported_, so a check that only compares `settled_amount` against `gross − reported_fees` will miss it. You have to compare the reported fees against the **published schedule** (`fee_schedule.json`) to catch it.
-- Every transaction here is in the normal settlement window. The curveballs (wide date windows, split settlements) live only in `data/`.
+- Each **refund** references a real originating sale: its `merchant_ref` matches an existing `SALE` already in the ledger, so both refunds resolve to a prior order (that order's ref carries two internal rows and two settlement rows). Matching must therefore be type/sign aware - pair the negative refund settlement with the `REFUND` row, not the sale's positive settlement.
+- This set is deliberately clean of the harder categories: **0 orphan refunds, 0 split (partial) settlements, 0 wide-window timing cases, and 0 malformed rows**. Those all live only in `data/`.
+- Every transaction here is in the normal settlement window.

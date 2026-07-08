@@ -39,6 +39,8 @@ Two datasets are provided:
 | `test/`   | Small, hand-verifiable. `test/EXPECTED.md` gives the correct break counts so you can check your matching logic as you go. |
 | `data/`   | Larger, realistic set with breaks of every category mixed in. This is what a "real" day looks like.                       |
 
+The `data/` set also includes a few deliberately malformed rows - a missing field, a non-numeric amount, an unexpected currency, and the like. Quarantine them gracefully rather than letting them crash the run.
+
 **The formats are intentionally different**, as they are in real life - you're integrating two systems that were never designed to talk to each other:
 
 ### `internal_transactions.csv` - our ledger (CSV)
@@ -47,7 +49,7 @@ Two datasets are provided:
 | ----------------- | ------------------------------------------------------------------------------- |
 | `internal_txn_id` | Our primary key. **Does not appear anywhere in the settlement file.**           |
 | `merchant_id`     | e.g. `MERCH-004`                                                                |
-| `merchant_ref`    | Our order reference. The processor _usually_ echoes this back - but not always. |
+| `merchant_ref`    | Our order reference. The processor _usually_ echoes this back - but not always. A REFUND reuses its original sale's reference, so a refunded order shows up as a SALE row and a REFUND row sharing this value. |
 | `card_type`       | `VISA`, `MASTERCARD`, `AMEX`, `DISCOVER`                                        |
 | `card_last4`      | Last four of the card                                                           |
 | `gross_amount`    | The full amount, **before fees**. Negative for refunds.                         |
@@ -67,7 +69,7 @@ Two datasets are provided:
 | `currency`                               |                                                                               |
 | `settlement_date`                        | The date it settled - **typically 1–3 days after** `captured_at`              |
 
-> **The central challenge:** there is no shared primary key. `internal_txn_id` never appears on the settlement side, and `merchant_ref` is your best link but isn't always present. Deciding **how to match the two sides** is the heart of this exercise.
+> **No shared primary key.** `internal_txn_id` never appears on the settlement side. `merchant_ref` is the natural link, but it's blank on a large share of settlement rows - so you'll need a documented fallback strategy (e.g. merchant + card + amount) for the rows it can't cover. Matching is one of several things you have to get right, alongside the fee math and correct break classification - not a trick in itself.
 
 ---
 
@@ -83,7 +85,7 @@ processor_fee   = round(gross × markup.percent      + markup.flat)
 expected_settled = gross − interchange_fee − processor_fee
 ```
 
-Rounding is to the cent (half-up). The schedule is in **`fee_schedule.json`**:
+**Each fee is rounded to the cent (half-up) _before_ the settled amount is derived** - so `expected_settled = gross − round(interchange_fee) − round(processor_fee)`, not a single rounding step at the end. The schedule is in **`fee_schedule.json`**:
 
 | Card type  | Interchange % | Interchange flat |
 | ---------- | ------------- | ---------------- |
@@ -94,7 +96,7 @@ Rounding is to the cent (half-up). The schedule is in **`fee_schedule.json`**:
 
 Plus a flat **processor markup** applied to every card: **0.30% + $0.05**.
 
-**Refunds** settle at the full negative gross with **no fees** (fees are not returned).
+**Refunds** settle at the full negative gross with **no fees** (fees are not returned). A refund echoes the **same `merchant_ref` as its original sale**, so a refunded order appears on the settlement side as a positive sale settlement _and_ a negative refund settlement under that one reference - pair them by reference **and** type/sign; the negative row is not a duplicate of the positive one.
 
 Because a correct match depends on the fee math, a settlement can be wrong in two different ways, and you should tell them apart:
 
@@ -112,7 +114,7 @@ Your report should identify at least these break categories. Names are yours to 
 - **Amount mismatch**: matched, but the settled principal is off by more than rounding.
 - **Fee discrepancy**: fees deviate from the published schedule - we may have been overcharged.
 - **Duplicate settlement**: the same payment settled more than once. We'd be double-paid.
-- **Orphan refund**: a refund with no corresponding original sale.
+- **Orphan refund**: a refund whose `merchant_ref` matches **no** SALE anywhere in the ledger - a refund with no originating sale. There's no special marker; you detect it by the absence of a matching sale reference.
 
 ---
 
@@ -132,7 +134,7 @@ At minimum, the app should show:
 
 These have no single right answer. Make a call, and be ready to explain it:
 
-1. **Amount tolerance** - how close is "matched"? What do you do about sub-cent rounding?
+1. **Amount tolerance** - how close is "matched"? What do you do about sub-cent rounding? Reconstructing the expected settled amount a slightly different way than the source data can differ by a cent, so pick a tolerance that absorbs those sub-cent differences rather than flagging them as breaks.
 2. **Date window** - settlement usually lands in 1–3 days. The data contains a few that settle much later. Do you still match those, or flag them? Why?
 3. **Split settlements** - a single capture can settle as multiple partial rows that sum to the expected net. How would you handle that? _(bonus)_
 
