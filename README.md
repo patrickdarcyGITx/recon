@@ -195,7 +195,7 @@ This is a senior role, so we're reading for judgment, not just a working demo: s
 1. **Fork** this repository.
 2. Build your solution in the fork.
 3. Include a **README** with setup/run instructions, and a **`PROMPTS.md`** if you used an LLM.
-4. Open a **pull request** back to this repo (or share a link to your fork), and let us know it's ready.
+4. Open a **pull request** back to this repo, and let us know it's ready.
 
 Meaningful commit history is welcome - it helps us see how you work. Don't commit secrets (`.env`, keys, credentials) or large generated artifacts.
 
