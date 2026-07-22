@@ -1,6 +1,7 @@
 package com.platinum.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.platinum.model.RuntimeMessage;
@@ -9,6 +10,7 @@ import com.platinum.model.Transaction;
 import com.platinum.service.DataLoaderSettlement;
 import com.platinum.service.DataLoaderTransaction;
 import com.platinum.service.ReconcileTransactions;
+import com.platinum.service.ReportService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +31,9 @@ public class TransactionController  {
 	@Autowired
 	ReconcileTransactions reconcileTransactions;
 	
+	@Autowired
+	ReportService reportService;
+	
 	public static List<Transaction> transactions = new ArrayList<>();
 	
 	public static Integer int1 = 0;
@@ -41,37 +46,37 @@ public class TransactionController  {
 	@GetMapping("/transactions")
     public RuntimeMessage getAllTransactipns() throws IOException {
     	
-    	System.out.println("DARCYX-getAllTransactions");
-    	
+    		
     	RuntimeMessage runtimeMessage = new RuntimeMessage
-				(1,"Reconcile Report","Completed Sucessfully");
+				(1,"Reconcile Report: \\recon\\src\\main\\resources\\test\\RECONCILE_All_TRANSACTIONS_REPORT.csv  or target/Jarfile-execution-:\\recon\\target\\src\\main\\resources\\test\\RECONCILE_All_TRANSACTIONS_REPORT.csv ",
+				 "Completed Sucessfully,  now if you want to stop the RestFul web service enter command line >curl -X POST http://localhost:8080/actuator/shutdown");
     	
      
     	HashMap<String, Transaction> transactionMap;
-      	transactionMap = dataLoaderTransaction.loadTables();
+    	transactionMap = dataLoaderTransaction.loadTables();
     	    	 	
     	HashMap<String, Settlement> settlementMap;
      	settlementMap = dataLoaderSettlement.loadTables();     	
     
      	settlementMap.forEach((key, value) -> {
-    		System.out.println("DARCYX-getAllTransactipns-settlementMap -last4:" + key + " : " + value.getCard_last4());
+    		System.out.println("-getAllTransactipns-settlementMap -last4:" + key + " : " + value.getCard_last4());
     	});
      	
-     	reconcileTransactions.balanceTransactions(settlementMap, transactionMap);
-  
+    	reconcileTransactions.balanceTransactions(settlementMap, transactionMap);
      	
-        return runtimeMessage;
+     	// Create a CSV file of all the Transactions Reconciled, this allows all types of Summary looks
+     	reportService.exportUsersToCsv("RECONCILE_All_TRANSACTIONS_REPORT");
+     	
+     //	return reportService.downloadProductReport();    
+     	
+     
+     	 return runtimeMessage;
     }
 
     @PostMapping
     public Transaction addTransaction(@RequestBody Transaction transaction) {
-    	System.out.println("DARCYX-addProduct-product-name " );
-    	System.out.println("DARCYX-addProduct-product-price " );
-    	
-//        product.setId((long) (products.size() + 1));
-//        products.add(product);
-//        
-//        System.out.println("DARCYX-addProduct-infront-of-return  " + product.getPrice());
-        return transaction;
+    	System.out.println(" addTransaction This is a place marker TODO later " );  //TODO later if need be
+    	 
+    	return transaction;
     }
 }

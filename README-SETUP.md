@@ -6,11 +6,11 @@
 
 3) There are 2 ways to run this project one is by using the jar file in the command prompt in the path that the jar file is stored, and the other is by running it out of eclipse.
 
-   a) C:\training\Darcy-New-1-7-2026\Platinum\recon\target>java -jar recon-0.0.1-SNAPSHOT.jar
+   a) \recon\target>java -jar recon-0.0.1-SNAPSHOT.jar
 
    b) Get the recon project imported into Spring eclipse and then inside the public class ReconApplication class right click and run it as 'Spring Boot App'. 
    
-   note: The running of this project create the Postgresql database with the 3 tables tran_rec_status_test, 
+   note: The running of this project creates the Postgresql database with the 3 tables tran_rec_status_test, 
          processor_settlement_test, internal_transactions_test.
 
 4) I load the 2 input files into 2 tables which is very useful to help debug how the files work together. processor_settlement_test, internal_transactions_test.  (these files are currently pointing to the test files)
@@ -29,10 +29,25 @@
     
     {
     "id": 1,
-    "reconcileMsg": "Reconcile Report",
+    "reconcileMsg": "Reconcile Report: \\recon\\src\\main\\resources\\test\\RECONCILE_All_TRANSACTIONS_REPORT.csv ",
     "reconcileStatus": "Completed Sucessfully"
     }
-8) In the code I used a lot of different coding examples to demonstrate my code knowledge, I might have done things a little unOrthodox in some cases as a result of this approach.
+8) IMPORTANT IMPORTANT IMPORTANT  To stop the RestFul web service from running no matter which way you run via eclipse or JAR file to bring it to graceful 
+   ending so that the Report Excel files get flushed out of the buffers you must run the following command in the command line:
+   
+   >curl -X POST http://localhost:8080/actuator/shutdown
+   
+   C:\Users\pjdDa>curl -X POST http://localhost:8080/actuator/shutdown
 
-9) I also included my working/debug SQL queries in the folder recon\src\main\resources\SQL / platinum_balance_queries.  
+      {"message":"Shutting down, bye..."}
+   
+9) In the code I used a lot of different coding examples to demonstrate my code knowledge, I might have done things a little unOrthodox in some cases as a result of this approach.
+
+10) I also included my working/debug SQL queries in the folder recon\src\main\resources\SQL / platinum_balance_queries.  
+
+11) The below report is a CSV report which has the status of all the Transaction Records and their reconciliation results, this allows
+    the Client to do Report summaries as need be..
+        \\recon\\src\\main\\resources\\test\\RECONCILE_All_TRANSACTIONS_REPORT.csv "     this is where it resides if you run it from eclipse
+        \recon\target\src\main\resources\test\RECONCILE_All_TRANSACTIONS_REPORT.csv     this is where it resides if you run jar out of target directory 
+    
  

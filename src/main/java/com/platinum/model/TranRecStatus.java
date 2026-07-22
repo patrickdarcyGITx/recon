@@ -13,12 +13,13 @@ public class TranRecStatus {
 	public TranRecStatus() {}
 	  
 	public TranRecStatus
-	  (String card_last4, String type, double gross_amount,String reconcile_status,
+	  (String card_last4, String card_type, String type, double gross_amount,String reconcile_status,
 			  double settlement_amount, double set_settlement_amount, Date captured_at)
 	  
 	  {
 		//this.id = id; Long id, 
 		this.card_last4 = card_last4;
+		this.card_type = card_type;
 	   	this.type = type;
     	this.gross_amount = gross_amount;
    	   	this.reconcile_status = reconcile_status;
@@ -31,10 +32,9 @@ public class TranRecStatus {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String card_last4;
+	private String card_type;
 	private String type;
-	// this also works for a CSV file to remove "N/A" in double field
-	@JsonDeserialize(using = CustomDoubleDeserializer.class)
-	private double gross_amount; // BigDecimal
+	private double gross_amount;  
 	private Date captured_at;
 	private String reconcile_status;
    	private double tran_settlement_amount;
@@ -101,6 +101,14 @@ public class TranRecStatus {
 
 	public void setSet_settlement_amount(double set_settlement_amount) {
 		this.set_settlement_amount = set_settlement_amount;
+	}
+
+	public String getCard_type() {
+		return card_type;
+	}
+
+	public void setCard_type(String card_type) {
+		this.card_type = card_type;
 	}
 
 }

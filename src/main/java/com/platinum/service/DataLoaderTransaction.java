@@ -2,6 +2,7 @@ package com.platinum.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Service;
 
@@ -37,8 +39,9 @@ public class DataLoaderTransaction {
 
 //		// Define schema matching the POJO structure, using headers from the file
  		CsvSchema schema = CsvSchema.emptySchema().withHeader();
-//
- 		File csvFile = new File("src/main/resources/test/internal_transactions.csv");
+ 
+ 	// Path to your csv file for test  -- for Production	change  /test/ to  /data/
+ 		InputStream csvFile = new ClassPathResource("/test/internal_transactions.csv").getInputStream();
 
 //		// Read the values into an iterator
  		MappingIterator<Transaction> iterator = csvMapper.readerFor(Transaction.class).with(schema).readValues(csvFile);
@@ -52,7 +55,7 @@ public class DataLoaderTransaction {
  		
   	   for (Transaction trans : tranactionsBad) {
           
-           reconcileTransactions.loadReconcileStatus(trans.getCard_last4(), trans.getType(), 0,
+           reconcileTransactions.loadReconcileStatus(trans.getCard_last4(),trans.getCard_type(), trans.getType(), 0,
         		   "Bad Rec : " + trans.getMerchant_ref(), 0, 0, trans.getCaptured_at());                  
         }
  	    

@@ -58,18 +58,15 @@ public class ReconcileTransactions {
 
 		transactionMap.forEach((key, value) -> {
 
+			//validate that Transaction record has at least one Settlement record
 			List<String> matchingKeys = settlementMap.keySet().stream()
 					.filter(keyx -> keyx != null && keyx.startsWith(value.getCard_last4())).toList(); //
-			System.out.println("DARCYX-matchingkeys : " + matchingKeys);
-
-			System.out.println("DARCYX-transaction-get-card-last4 : " + value.getCard_last4());
-
-			System.out.println("DARCYX-transaction-get-gross-amount : " + value.getGross_amount());
-
+		
+			System.out.println("balanceTransactions-matchingkeys : " + matchingKeys);
+			
 			if (matchingKeys.isEmpty()) {
-
 				try {
-					loadReconcileStatus(value.getCard_last4(), value.getType(), value.getGross_amount(),
+					loadReconcileStatus(value.getCard_last4(),value.getCard_type(),value.getType(), value.getGross_amount(),
 							"Missing Setttlement Match", 0.00, 0.00, value.getCaptured_at());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -111,7 +108,7 @@ public class ReconcileTransactions {
 						}
 
 						try {
-							loadReconcileStatus(value.getCard_last4(), value.getType(), value.getGross_amount(), status,
+							loadReconcileStatus(value.getCard_last4(),value.getCard_type(), value.getType(), value.getGross_amount(), status,
 									settleAmount, sd.getSettled_amount(), value.getCaptured_at());
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
@@ -120,7 +117,7 @@ public class ReconcileTransactions {
 					}
 				}
 			} else {
-				System.out.println("DARCYX-this need REFUND CODE : "); // TODO write this code time permitting
+				System.out.println("This is the  REFUND CODE : "); 
 
 				// Iterating using for loop
 				for (int i = 0; i < matchingKeys.size(); i++) {
@@ -129,9 +126,9 @@ public class ReconcileTransactions {
 					System.out.println("Settlement-key : " + matchingKeys.get(i) + " i:  " + i);
 
 					Settlement sd = settlementMap.get(matchingKeys.get(i));
-
-					System.out.println("Settlement-key-sd-getCard_Last4 : " + sd.getCard_last4());
-					System.out.println("Settlement-sd.getSettled_amount(): " + sd.getSettled_amount());
+//
+//					System.out.println("Settlement-key-sd-getCard_Last4 : " + sd.getCard_last4());
+//					System.out.println("Settlement-sd.getSettled_amount(): " + sd.getSettled_amount());
 
 					// negative numbers indicates a refund
 					if (sd.getSettled_amount() < 0) {
@@ -143,11 +140,11 @@ public class ReconcileTransactions {
 
 							status = "Transact Refund Settlement Balanced";
 						} else {
-							status = "Transact Refund Settlment DId NOT Balanced";
+							status = "Transact Refund Settlment DID NOT Balance";
 						}
 
 						try {
-							loadReconcileStatus(value.getCard_last4(), value.getType(), value.getGross_amount(), status,
+							loadReconcileStatus(value.getCard_last4(),value.getCard_type(), value.getType(), value.getGross_amount(), status,
 									0.0, sd.getSettled_amount(), value.getCaptured_at());
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
@@ -161,13 +158,13 @@ public class ReconcileTransactions {
 
 	}
 
-	public void loadReconcileStatus(String cardLast4, String type, double grossAmt, String reconcileStatus,
+	public void loadReconcileStatus(String cardLast4, String card_type, String type, double grossAmt, String reconcileStatus,
 			double settlementAmount, double setSettlementAmount, java.util.Date date)
 			throws StreamReadException, DatabindException, IOException {
 
 		LocalDate localDate = LocalDate.now();
 
-		trsRec = new TranRecStatus(cardLast4, type, grossAmt, reconcileStatus, settlementAmount, setSettlementAmount,
+		trsRec = new TranRecStatus(cardLast4, card_type, type, grossAmt, reconcileStatus, settlementAmount, setSettlementAmount,
 				date);
 
 		tranRecStatusRepository.save(trsRec);

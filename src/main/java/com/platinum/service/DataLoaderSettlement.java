@@ -1,6 +1,9 @@
 package com.platinum.service;
 
 import java.io.File;
+import org.springframework.core.io.ClassPathResource;
+import java.io.InputStream;
+
 import java.io.IOException;
  
 import java.util.Date;
@@ -32,10 +35,8 @@ public class DataLoaderSettlement {
 	
 	public HashMap<String,Settlement> loadTables() throws IOException {
 
-		// Path to your JSON file
-//	File jsonFile = new File("src/main/resources/test/processor_settlement.json");
-//Production	
-		File jsonFile = new File("src/main/resources/test/processor_settlement.json");
+		// Path to your JSON file for test  -- for Production	change /test/ to /data/
+		InputStream jsonFile = new ClassPathResource("/test/processor_settlement.json").getInputStream();
 
 		// there was a bug where it could not find ObjectMapper so I did a kludge
 		final ObjectMapper objectMapper = new ObjectMapper();
@@ -49,16 +50,16 @@ public class DataLoaderSettlement {
  	    		.filter(n -> n.getMerchant_ref().contains("BAD"))
  	    		.collect(Collectors.toList());
  		
- 	    settlementsBad.forEach(x -> System.out.println("foreach : " + x.getMerchant_ref()));
+ 	   //Display ORD-BAD   TODO turn off later 
+ 	   settlementsBad.forEach(x -> System.out.println("foreach : " + x.getMerchant_ref()));
  	    
  	   Date currentDate = new Date();
  	    
  	   for (Settlement settl : settlementsBad) {
-              reconcileTransactions.loadReconcileStatus(settl.getCard_last4(), "Settlement", 0,
+              reconcileTransactions.loadReconcileStatus(settl.getCard_last4(),settl.getCard_type(), "Settlement", 0,
         		   "Bad Rec : " + settl.getMerchant_ref(), 0, 0, currentDate);                  
         }
- 	    
- 
+ 	     
  	   List<Settlement>    settlementsGood = settlements.stream()
      		.filter(n -> !(n.getMerchant_ref().contains("BAD")) )
 	    		.collect(Collectors.toList());
